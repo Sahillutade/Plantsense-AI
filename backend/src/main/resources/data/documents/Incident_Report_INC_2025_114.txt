@@ -1,0 +1,28 @@
+INCIDENT REPORT
+Report No: INC-2025-114
+Date of Incident: 2025-11-03
+Equipment Involved: P-204
+Severity: Minor (no injury, process impact only)
+
+DESCRIPTION
+During routine shift rounds, operator A. Kulkarni observed visible leakage from the
+mechanical seal of pump P-204. Pump was isolated and tagged out. Inspection confirmed
+seal face wear consistent with dry-running conditions, suspected to be caused by a
+temporary loss of seal flush flow that was not detected by the flow alarm.
+
+IMMEDIATE ACTION
+Pump isolated, seal replaced under WO-3275. Flush flow alarm setpoint recalibrated.
+
+CONTRIBUTING FACTORS
+1. Flush flow alarm setpoint was set above the actual minimum safe flow, delaying
+   detection of the flow loss.
+2. No secondary indication (e.g. seal temperature) was monitored for this pump class.
+
+LESSONS LEARNED
+Pumps of this class (Kirloskar KBL-CP-450) rely on a single flow-based alarm for
+seal protection. Recommend adding seal temperature monitoring as a secondary
+indicator across all pumps of this model, not just P-204. This incident, combined
+with the March 2026 failure (WO-3381), indicates a systemic gap in seal protection
+monitoring for this equipment class rather than an isolated case.
+
+STATUS: Closed - recommendation pending implementation across fleet

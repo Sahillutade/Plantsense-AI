@@ -1,0 +1,9 @@
+equipment_tag,equipment_type,location,installed_date,manufacturer,model,criticality
+P-204,Centrifugal Pump,Unit 2 - Process Area,2018-03-14,Kirloskar Brothers,KBL-CP-450,High
+P-101,Centrifugal Pump,Unit 1 - Feed Section,2015-07-22,Grundfos,NK-200,Medium
+V-12,Pressure Vessel,Unit 1 - Storage,2012-11-05,L&T Heavy Engineering,PV-3000,High
+C-301,Reciprocating Compressor,Unit 3 - Compression,2019-01-30,Ingersoll Rand,IR-RC-700,High
+HX-205,Shell & Tube Heat Exchanger,Unit 2 - Process Area,2016-05-18,Thermax,TX-HX-150,Medium
+T-410,Storage Tank,Tank Farm,2010-09-01,Hindustan Tank Works,HTW-T500,Low
+V-22,Pressure Relief Valve,Unit 2 - Process Area,2018-03-14,Crosby,JOS-E,High
+M-115,Induction Motor,Unit 1 - Feed Section,2015-07-22,Siemens,1LE1003,Medium

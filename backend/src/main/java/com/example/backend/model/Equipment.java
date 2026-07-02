@@ -18,28 +18,31 @@ public class Equipment {
     @Id
     @Column(name = "equipment_tag", nullable = false, length = 20)
     private String equipmentTag;
-
+ 
+    // e.g. "Centrifugal Pump", "Pressure Vessel"
     @Column(name = "equipment_type", nullable = false)
     private String equipmentType;
-
+ 
+    // e.g. "Unit 2 - Process Area"
     @Column(name = "location")
     private String location;
-
+ 
     @Column(name = "installed_date")
     private LocalDate installedDate;
-
+ 
     @Column(name = "manufacturer")
     private String manufacturer;
-
+ 
     @Column(name = "model")
     private String model;
-
+ 
+    // High | Medium | Low
     @Column(name = "criticality")
     private String criticality;
-
+ 
     @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WorkOrder> workOrders = new ArrayList<>();
-
+ 
     @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL)
     private List<EntityMention> entityMentions = new ArrayList<>();
 

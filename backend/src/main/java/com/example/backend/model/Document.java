@@ -21,28 +21,33 @@ public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+ 
+    // Original filename e.g. "SOP_Pump_P204.txt"
     @Column(name = "filename", nullable = false)
-    private String fileName;
-
+    private String filename;
+ 
+    // SOP | WORK_ORDER | INSPECTION | INCIDENT | COMPLIANCE | OEM_MANUAL
     @Column(name = "doc_type", nullable = false)
     private String docType;
-
+ 
+    // Full extracted text stored here for re-chunking or preview
     @Column(name = "raw_text", columnDefinition = "TEXT", nullable = false)
     private String rawText;
-
+ 
+    // Relative path inside /data/documents/ or /data/structured/
     @Column(name = "source_path")
     private String sourcePath;
-
+ 
     @Column(name = "uploaded_at", nullable = false)
     private LocalDateTime uploadedAt;
-
+ 
+    // Bidirectional — chunks are the "many" side
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DocumentChunk> chunks = new ArrayList<>();
-
+ 
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EntityMention> entityMentions = new ArrayList<>();
-
+ 
     @PrePersist
     public void prePersist() {
         this.uploadedAt = LocalDateTime.now();
@@ -56,12 +61,12 @@ public class Document {
         this.id = id;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getFilename() {
+        return filename;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
     public String getDocType() {
@@ -115,10 +120,10 @@ public class Document {
     public Document() {
     }
 
-    public Document(Long id, String fileName, String docType, String rawText, String sourcePath,
+    public Document(Long id, String filename, String docType, String rawText, String sourcePath,
             LocalDateTime uploadedAt, List<DocumentChunk> chunks, List<EntityMention> entityMentions) {
         this.id = id;
-        this.fileName = fileName;
+        this.filename = filename;
         this.docType = docType;
         this.rawText = rawText;
         this.sourcePath = sourcePath;

@@ -1,0 +1,39 @@
+STANDARD OPERATING PROCEDURE
+Document No: SOP-PUMP-204-01
+Title: Operation and Monitoring of Centrifugal Pump P-204
+Unit: Unit 2 - Process Area
+Revision: 3
+Effective Date: 2024-02-10
+
+1. PURPOSE
+This procedure defines the operating envelope, monitoring requirements, and shutdown
+criteria for centrifugal pump P-204 (Kirloskar Brothers KBL-CP-450).
+
+2. OPERATING PARAMETERS
+- Normal discharge pressure: 6.5 - 7.2 bar
+- Maximum continuous vibration (ISO 10816 Zone B): 4.5 mm/s RMS
+- Seal flush flow: minimum 2 LPM continuous
+
+3. MONITORING REQUIREMENTS
+3.1 Vibration readings shall be logged every shift via the condition monitoring system.
+3.2 Any reading exceeding 4.5 mm/s RMS for more than 2 consecutive readings shall
+    trigger a mandatory inspection within 24 hours, regardless of production schedule.
+3.3 Operators shall not rely solely on automated alarms; manual log review is required
+    at shift handover.
+
+4. SHUTDOWN CRITERIA
+Immediate shutdown is required if:
+- Vibration exceeds 7.0 mm/s RMS
+- Seal flush flow drops below 1 LPM
+- Audible grinding or unusual noise is reported
+
+5. KNOWN FAILURE MODES
+Mechanical seal degradation is the most common failure mode for this pump class,
+typically preceded by a gradual rise in vibration over 3-7 days before seal rupture.
+Operators and maintenance teams should treat sustained vibration trends as an early
+warning indicator rather than waiting for alarm thresholds to be breached.
+
+6. REFERENCES
+- OEM Manual: Kirloskar Brothers KBL-CP-450 Maintenance Guide
+- ISO 10816-3 Mechanical Vibration Standards
+- Inspection Report INS-Q1-2026

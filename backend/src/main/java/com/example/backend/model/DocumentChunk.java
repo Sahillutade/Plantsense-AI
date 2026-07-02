@@ -17,14 +17,16 @@ public class DocumentChunk {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+ 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "document_id", nullable = false)
     private Document document;
-
+ 
+    // The actual text slice (300-500 tokens)
     @Column(name = "chunk_text", columnDefinition = "TEXT", nullable = false)
     private String chunkText;
-
+ 
+    // Position of this chunk within the parent document (0-indexed)
     @Column(name = "chunk_index", nullable = false)
     private Integer chunkIndex;
 

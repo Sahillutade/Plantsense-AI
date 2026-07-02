@@ -1,0 +1,26 @@
+OEM MAINTENANCE MANUAL EXCERPT
+Manufacturer: Kirloskar Brothers
+Model: KBL-CP-450 Centrifugal Pump Series
+Section 7: Mechanical Seal Maintenance
+
+7.1 SEAL TYPE
+KBL-CP-450 series pumps are fitted with a single mechanical seal, flush-cooled,
+requiring continuous flush flow of minimum 2 LPM to prevent dry-running damage to
+seal faces.
+
+7.2 COMMON FAILURE MODES
+- Dry running due to loss of flush flow: causes rapid seal face wear, typically
+  within hours of flow loss.
+- Gradual seal face wear under normal operation: typically preceded by a rising
+  vibration trend over several days as seal clearances increase.
+- Thermal shock from process temperature excursions.
+
+7.3 RECOMMENDED MONITORING
+Kirloskar Brothers recommends continuous vibration monitoring (per ISO 10816-3)
+as the primary early-warning indicator for seal degradation, since vibration trends
+typically precede visible leakage or seal rupture by 3-7 days. Flush flow monitoring
+alone is not sufficient, as it only detects failure after dry-running has begun.
+
+7.4 RECOMMENDED SPARE PARTS INVENTORY
+Maintain minimum 1 complete seal kit per installed unit for pumps in high-criticality
+service.

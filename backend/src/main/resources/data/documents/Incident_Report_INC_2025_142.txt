@@ -1,0 +1,32 @@
+INCIDENT REPORT
+Report No: INC-2025-142
+Date of Incident: 2025-08-30
+Equipment Involved: T-410
+Severity: Minor (no injury, no spill - caught before high-high alarm)
+
+DESCRIPTION
+During quarterly level gauge verification, manual dip measurement of tank T-410
+showed actual level of 81%, while the radar level gauge displayed 76% - a 5%
+discrepancy exceeding the 2% threshold defined in SOP-TANK-T410-01 Section 3.3.
+Had the discrepancy gone undetected, continued filling based on the gauge reading
+could have resulted in exceeding the 92% maximum safe fill level without triggering
+the high level alarm (set at 88% of indicated, not actual, level).
+
+IMMEDIATE ACTION
+Inlet valve throttled, level gauge recalibrated under WO-3210. Manual dip
+verification confirmed accuracy restored after recalibration.
+
+CONTRIBUTING FACTORS
+1. Ambient temperature variation during the preceding weeks (seasonal transition)
+   is the suspected cause of radar transmitter reference drift, consistent with
+   the known failure mode described in SOP-TANK-T410-01 Section 4.
+2. Quarterly verification interval meant the drift had been present for an
+   unknown duration prior to detection.
+
+LESSONS LEARNED
+This is the first recorded gauge drift incident on T-410, but the failure mode is
+known to be common across radar-type level gauges installed in this tank farm.
+Recommend cross-checking other tanks fitted with the same gauge model and
+considering a shorter verification interval during seasonal transition periods.
+
+STATUS: Closed - recalibration completed, fleet-wide check recommended
