@@ -26,6 +26,7 @@ import com.example.backend.model.EntityMention;
 import com.example.backend.model.Equipment;
 import com.example.backend.repository.DocumentChunkRepository;
 import com.example.backend.repository.DocumentRepository;
+import com.example.backend.repository.EmbeddingRepository;
 import com.example.backend.repository.EntityMentionRepository;
 import com.example.backend.repository.EquipmentRepository;
 
@@ -60,12 +61,18 @@ public class IngestionService {
     private final DocumentChunkRepository chunkRepository;
     private final EquipmentRepository equipmentRepository;
     private final EntityMentionRepository entityMentionRepository;
+    private final EmbeddingService embeddingService;
+    private final EmbeddingRepository embeddingRepository;
 
-    public IngestionService(DocumentRepository documentRepository, DocumentChunkRepository chunkRepository, EquipmentRepository equipmentRepository, EntityMentionRepository entityMentionRepository){
+    public IngestionService(DocumentRepository documentRepository, DocumentChunkRepository chunkRepository,
+            EquipmentRepository equipmentRepository, EntityMentionRepository entityMentionRepository,
+            EmbeddingService embeddingService, EmbeddingRepository embeddingRepository) {
         this.documentRepository = documentRepository;
         this.chunkRepository = chunkRepository;
         this.equipmentRepository = equipmentRepository;
         this.entityMentionRepository = entityMentionRepository;
+        this.embeddingService = embeddingService;
+        this.embeddingRepository = embeddingRepository;
     }
 
     // PUBLIC API
@@ -76,14 +83,7 @@ public class IngestionService {
         log.info("Starting ingestion: {}", filename);
 
         String rawText = extractText(file);
-        String docType = detectDocType(filename);
-
-        Document doc = saveDocument(filename, docType, rawText, sourcePath);
-        List<DocumentChunk> chunks = chunkAndSave(doc, rawText);
-        extractAndSaveEntityMentions(doc, rawText);
-
-        log.info("Ingested '{}' -> {} chunks, docType={}", filename, chunks.size(), docType);
-        return doc;
+        return ingestInternal(filename, rawText, sourcePath);
 
     }
 
@@ -92,12 +92,22 @@ public class IngestionService {
 
         log.info("Starting ingestion (text): {}", filename);
  
+        return ingestInternal(filename, rawText, sourcePath);
+
+    }
+
+    // CORE PIPELINE
+    private Document ingestInternal(String filename, String rawText, String sourcePath) {
+
         String docType = detectDocType(filename);
-        Document doc   = saveDocument(filename, docType, rawText, sourcePath);
-        chunkAndSave(doc, rawText);
+        Document doc = saveDocument(filename, docType, rawText, sourcePath);
+        List<DocumentChunk> chunks = chunkAndSave(doc, rawText);
+
+        embedChunks(chunks);
+
         extractAndSaveEntityMentions(doc, rawText);
- 
-        log.info("Ingested '{}' → docType={}", filename, docType);
+
+        log.info("Ingestion complete: '{}' -> {} chunks, docType={}", filename, chunks.size(), docType);
         return doc;
 
     }
@@ -180,7 +190,34 @@ public class IngestionService {
 
     }
 
-    // STEP 5 - ENTITY MENTION EXTRACTION
+    // STEP 5 - EMBED CHUNKS 
+    private void embedChunks(List<DocumentChunk> chunks) {
+
+        log.info("Embedding {} chunks...", chunks.size());
+
+        for (DocumentChunk chunk : chunks) {
+            try {
+                float[] embedding = embeddingService.embed(chunk.getChunkText());
+                embeddingRepository.saveEEmbedding(chunk.getId(), embedding);
+
+                // Small delay - respect HF free tier rate limits during seeding
+                Thread.sleep(300);
+            }
+            catch(InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.warn("Embedding interrupted at chunkId={}", chunk.getId());
+                break;
+            }
+            catch (Exception e) {
+                log.warn("Failed to embed chunkId={}: {}", chunk.getId(), e.getMessage());
+            }
+        }
+
+        log.info("Embedding complete for {} chunks", chunks.size());
+
+    }
+
+    // STEP 6 - ENTITY MENTION EXTRACTION
     private void extractAndSaveEntityMentions(Document doc, String rawText) {
 
         Matcher matcher = EQUIPMENT_PATTERN.matcher(rawText);
