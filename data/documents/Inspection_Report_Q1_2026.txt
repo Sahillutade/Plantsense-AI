@@ -1,0 +1,29 @@
+QUARTERLY INSPECTION REPORT
+Report No: INS-Q1-2026
+Unit: Unit 2 - Process Area
+Period: January - March 2026
+Inspector: Inspection Team (Lead: P. Nair)
+
+EQUIPMENT INSPECTED: P-204, HX-205, V-22
+
+FINDINGS - P-204 (Centrifugal Pump)
+Page 4
+On 2026-03-04, condition monitoring logs showed vibration readings of 5.1 mm/s RMS,
+exceeding the SOP-PUMP-204-01 threshold of 4.5 mm/s RMS. This reading was recorded
+in the shift log but was not escalated for inspection per procedure. Vibration
+continued to trend upward over the following five days. On 2026-03-09, pump P-204
+experienced a mechanical seal rupture (see Work Order WO-3381), resulting in 14 hours
+of unplanned downtime.
+
+Root cause assessment: Failure to escalate the 2026-03-04 vibration exceedance per
+SOP-PUMP-204-01 Section 3.2 was a contributing factor. This is the second seal-related
+failure on P-204 in the past 12 months (also see WO-3275, November 2025).
+
+Recommendation: Review condition monitoring alarm escalation workflow. Consider
+automated escalation trigger rather than relying on manual shift log review.
+
+FINDINGS - HX-205 (Heat Exchanger)
+No anomalies. Tube bundle cleaned per WO-3299, within normal fouling range.
+
+FINDINGS - V-22 (Relief Valve)
+Set-pressure verified within tolerance per WO-3340. No corrective action required.

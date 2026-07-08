@@ -1,0 +1,24 @@
+STATUTORY INSPECTION CERTIFICATE
+Certificate No: PESO-CERT-V12-2025
+Equipment: V-12 (Pressure Vessel, L&T Heavy Engineering PV-3000)
+Regulation Reference: PESO Static and Mobile Pressure Vessel Rules
+Inspecting Authority: Authorized Third-Party Inspector, License No. TPI-MH-0042
+
+CERTIFICATION SUMMARY
+This certifies that pressure vessel V-12, installed 2012-11-05 at Unit 1 - Storage,
+has been inspected in accordance with statutory requirements and is found fit for
+continued service under the following conditions:
+
+- Maximum allowable working pressure (MAWP): 18 bar
+- Hydrostatic test pressure: 27 bar (test conducted 2025-07-01, see WO-3050)
+- Thickness survey: within acceptable corrosion allowance (last survey WO-2940,
+  2025-04-10, no defects found)
+- Next statutory inspection due: 2026-07-01
+
+CONDITIONS OF CERTIFICATION
+1. Relief valve V-22 set pressure must be verified at or below MAWP at each
+   inspection cycle.
+2. Any modification to vessel nozzles or supports requires re-certification.
+
+This certificate is valid until 2026-07-01 or until next statutory inspection,
+whichever is earlier, per PESO Static and Mobile Pressure Vessel Rules.

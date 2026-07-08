@@ -1,0 +1,39 @@
+STANDARD OPERATING PROCEDURE
+Document No: SOP-VESSEL-V12-01
+Title: Operation and Monitoring of Pressure Vessel V-12
+Unit: Unit 1 - Storage
+Revision: 4
+Effective Date: 2022-06-15
+
+1. PURPOSE
+This procedure defines the operating envelope and monitoring requirements for
+pressure vessel V-12 (L&T Heavy Engineering PV-3000), used for intermediate
+process storage.
+
+2. OPERATING PARAMETERS
+- Maximum allowable working pressure (MAWP): 18 bar
+- Normal operating pressure: 12 - 15 bar
+- Relief valve V-22 set pressure: 18 bar (must not exceed MAWP)
+- Maximum fill level: 85% of vessel capacity
+
+3. MONITORING REQUIREMENTS
+3.1 Pressure and level shall be logged continuously via DCS.
+3.2 Relief valve V-22 set pressure shall be verified at every statutory inspection
+    cycle and after any vessel modification.
+3.3 External corrosion inspection (visual) required quarterly; internal thickness
+    survey required per PESO statutory schedule.
+
+4. STATUTORY COMPLIANCE
+This vessel is subject to PESO Static and Mobile Pressure Vessel Rules. Statutory
+hydrostatic testing and certification renewal is required prior to certificate
+expiry (see Compliance Certificate PESO-CERT-V12-2025). Operating beyond certificate
+expiry without renewal is a regulatory violation and grounds for immediate shutdown.
+
+5. KNOWN RISK AREAS
+Relief valve V-22 is the primary overpressure protection for this vessel. Any
+deviation in V-22 set pressure verification must be treated as a high-priority
+finding, since V-12 has no secondary overpressure protection device.
+
+6. REFERENCES
+- Compliance Certificate PESO-CERT-V12-2025
+- Work Orders WO-3050, WO-2940, WO-3340

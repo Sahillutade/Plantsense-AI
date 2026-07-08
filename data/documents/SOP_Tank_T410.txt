@@ -1,0 +1,35 @@
+STANDARD OPERATING PROCEDURE
+Document No: SOP-TANK-T410-01
+Title: Operation and Monitoring of Storage Tank T-410
+Unit: Tank Farm
+Revision: 2
+Effective Date: 2021-09-01
+
+1. PURPOSE
+This procedure defines operating limits and level monitoring requirements for
+storage tank T-410 (Hindustan Tank Works HTW-T500).
+
+2. OPERATING PARAMETERS
+- Maximum safe fill level: 92% of tank capacity
+- High level alarm: 88%
+- High-high level alarm (auto-trip of inlet valve): 90%
+- Level gauge calibration check interval: quarterly
+
+3. MONITORING REQUIREMENTS
+3.1 Level shall be monitored continuously via radar-type level gauge.
+3.2 Level gauge accuracy shall be verified quarterly against manual dip
+    measurement, as calibration drift is a known failure mode for this
+    instrument type in tanks exposed to ambient temperature variation.
+3.3 Any discrepancy greater than 2% between gauge reading and manual dip
+    measurement requires immediate gauge recalibration before continued reliance
+    on automatic level control.
+
+4. KNOWN FAILURE MODES
+Level gauge calibration drift is the most common instrumentation issue for tanks
+of this type, typically caused by ambient temperature swings affecting the radar
+transmitter reference point. Drift tends to manifest gradually and may not trigger
+fault alarms, making quarterly verification essential rather than relying solely
+on alarm status.
+
+5. REFERENCES
+- Work Order WO-3210

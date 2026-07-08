@@ -1,0 +1,38 @@
+STANDARD OPERATING PROCEDURE
+Document No: SOP-COMP-301-01
+Title: Operation and Monitoring of Reciprocating Compressor C-301
+Unit: Unit 3 - Compression
+Revision: 2
+Effective Date: 2023-11-05
+
+1. PURPOSE
+This procedure defines the operating envelope, cooling water requirements, and trip
+criteria for reciprocating compressor C-301 (Ingersoll Rand IR-RC-700).
+
+2. OPERATING PARAMETERS
+- Discharge temperature normal range: 95 - 120 C
+- Discharge temperature high trip setpoint: 145 C
+- Minimum cooling water flow: 40 LPM
+- Cooling water inlet temperature: not to exceed 35 C
+
+3. MONITORING REQUIREMENTS
+3.1 Cooling water flow and discharge temperature are logged continuously via DCS.
+3.2 A sustained drop in cooling water flow below 40 LPM for more than 5 minutes
+    requires immediate operator investigation, independent of automatic trip logic.
+3.3 Strainer at the cooling water inlet shall be inspected monthly for fouling, as
+    restricted flow is the most common cause of high discharge temperature trips.
+
+4. TRIP LOGIC
+Compressor will automatically trip on discharge temperature exceeding 145 C. Operators
+shall not reset and restart without confirming cooling water flow has been restored
+and root cause identified.
+
+5. KNOWN FAILURE MODES
+Cooling water flow restriction due to strainer fouling is the predominant cause of
+high discharge temperature trips for this compressor class. Seasonal cooling water
+quality changes (monsoon silt loading) increase strainer fouling frequency between
+June and September.
+
+6. REFERENCES
+- OEM Manual: Ingersoll Rand IR-RC-700 Maintenance Guide
+- Work Order WO-3155

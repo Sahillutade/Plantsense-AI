@@ -1,0 +1,29 @@
+INCIDENT REPORT
+Report No: INC-2025-098
+Date of Incident: 2025-09-18
+Equipment Involved: C-301
+Severity: Minor (no injury, production impact - 10 hours downtime)
+
+DESCRIPTION
+Compressor C-301 tripped on high discharge temperature (147 C, exceeding the 145 C
+setpoint per SOP-COMP-301-01) during routine operation. Investigation identified
+cooling water inlet strainer fouling, reducing flow to approximately 22 LPM against
+a minimum requirement of 40 LPM.
+
+IMMEDIATE ACTION
+Compressor isolated, strainer cleaned, cooling water flow restored and verified
+under WO-3155. Compressor restarted after 10 hours downtime.
+
+CONTRIBUTING FACTORS
+1. Strainer inspection interval (monthly) did not align with elevated fouling risk
+   during monsoon season (June-September), as noted in SOP-COMP-301-01 Section 5.
+2. No flow-based alarm existed independent of the temperature trip; flow degradation
+   was not visible to operators until temperature rose.
+
+LESSONS LEARNED
+This is the second monsoon-season strainer-fouling trip on C-301 in two years.
+Recommend increasing strainer inspection frequency to biweekly during June-September
+and adding a low cooling water flow alarm independent of the discharge temperature
+trip, to provide earlier warning before temperature limits are approached.
+
+STATUS: Closed - recommendation pending implementation
