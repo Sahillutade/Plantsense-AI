@@ -14,6 +14,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.tika.Tika;
+import org.apache.tika.exception.TikaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -121,8 +123,18 @@ public class IngestionService {
         : "";
 
         if (filename.endsWith(".pdf")) {
-            // TODO: wire in Apache Tika or PDFBox when ready
-            throw new UnsupportedOperationException("PDF extraction not yet wired. Add Apache Tika dependency and implement.");
+            try {
+                Tika tika = new Tika();
+                String extracted = tika.parseToString(file.getInputStream());
+                if(extracted == null || extracted.isBlank()) {
+                    throw new IOException("Tika extracted empty text from PDF: " + filename + ". File may be a scanned image - OCR not supported.");
+                }
+                log.info("Tika extracted {} chars from PDF: {}", extracted.length(), filename);
+                return extracted;
+            }
+            catch (TikaException e) {
+                throw new IOException("Tika failed to parse PDF: " + filename + " - " + e.getMessage(), e);
+            }
         }
 
         // .txt and .csv - plain UTF-8 read

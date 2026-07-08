@@ -1,5 +1,6 @@
 package com.example.backend.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
@@ -41,7 +42,7 @@ public class WorkOrder {
     private String technician;
 
     @Column(name = "downtime_hours")
-    private Double downtimeHours;
+    private BigDecimal downtimeHours;
 
     public String getWorkOrderId() {
         return workOrderId;
@@ -107,11 +108,11 @@ public class WorkOrder {
         this.technician = technician;
     }
 
-    public Double getDowntimeHours() {
+    public BigDecimal getDowntimeHours() {
         return downtimeHours;
     }
 
-    public void setDowntimeHours(Double downtimeHours) {
+    public void setDowntimeHours(BigDecimal downtimeHours) {
         this.downtimeHours = downtimeHours;
     }
 
@@ -119,7 +120,7 @@ public class WorkOrder {
     }
 
     public WorkOrder(String workOrderId, Equipment equipment, LocalDate dateOpened, LocalDate dateClosed, String type,
-            String description, String rootCause, String technician, Double downtimeHours) {
+            String description, String rootCause, String technician, BigDecimal downtimeHours) {
         this.workOrderId = workOrderId;
         this.equipment = equipment;
         this.dateOpened = dateOpened;

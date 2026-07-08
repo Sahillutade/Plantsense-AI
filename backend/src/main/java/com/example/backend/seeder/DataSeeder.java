@@ -2,6 +2,7 @@ package com.example.backend.seeder;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
@@ -66,7 +67,7 @@ public class DataSeeder implements ApplicationRunner {
 
         log.info("Seeding equipment...");
 
-        save(equipment("p-204", "Centrifugal Pump", "Unit 2 - Process Area",  "2018-03-14", "Kirloskar Brothers", "KBL-CP-450", "High"));
+        save(equipment("P-204", "Centrifugal Pump", "Unit 2 - Process Area",  "2018-03-14", "Kirloskar Brothers", "KBL-CP-450", "High"));
         save(equipment("P-101", "Centrifugal Pump", "Unit 1 - Feed Section", "2015-07-22", "Grundfos", "NK-200", "Medium"));
         save(equipment("V-12",  "Pressure Vessel", "Unit 1 - Storage", "2012-11-05", "L&T Heavy Engineering","PV-3000", "High"));
         save(equipment("C-301", "Reciprocating Compressor", "Unit 3 - Compression", "2019-01-30", "Ingersoll Rand", "IR-RC-700", "High"));
@@ -108,44 +109,44 @@ public class DataSeeder implements ApplicationRunner {
         log.info("Seeding work orders...");
 
         // P-204 history
-        wo("WO-3201", "P-204", "2025-08-12", "2025-08-12", "Preventive", "Routine seal inspection - no anomalies found", "N/A", "R. Mehta", 0.0);
-        wo("WO-3275", "P-204","2025-11-03", "2025-11-04", "Corrective", "Mechanical seal leak detected during shift inspection", "Seal face wear due to dry running", "A. Kulkarni", 6.0);
-        wo("WO-3381", "P-204", "2026-03-09", "2026-03-10", "Corrective", "Pump failure - high vibration followed by seal rupture", "Mechanical seal degradation; vibration threshold exceeded 5 days prior without flagged inspection", "A. Kulkarni", 14.0);
-        wo("WO-3390", "P-204", "2026-03-15", "2026-03-15", "Preventive", "Post-repair vibration baseline check", "N/A", "R. Mehta", 0.0);
-        wo("WO-3402", "P-204", "2026-04-02", "2026-04-02", "Preventive", "30-day post-repair follow-up inspection", "N/A", "A. Kulkarni" ,0.0);
+        wo("WO-3201", "P-204", "2025-08-12", "2025-08-12", "Preventive", "Routine seal inspection - no anomalies found", "N/A", "R. Mehta", BigDecimal.valueOf(0.0));
+        wo("WO-3275", "P-204","2025-11-03", "2025-11-04", "Corrective", "Mechanical seal leak detected during shift inspection", "Seal face wear due to dry running", "A. Kulkarni", BigDecimal.valueOf(6.0));
+        wo("WO-3381", "P-204", "2026-03-09", "2026-03-10", "Corrective", "Pump failure - high vibration followed by seal rupture", "Mechanical seal degradation; vibration threshold exceeded 5 days prior without flagged inspection", "A. Kulkarni", BigDecimal.valueOf(14.0));
+        wo("WO-3390", "P-204", "2026-03-15", "2026-03-15", "Preventive", "Post-repair vibration baseline check", "N/A", "R. Mehta", BigDecimal.valueOf(0.0));
+        wo("WO-3402", "P-204", "2026-04-02", "2026-04-02", "Preventive", "30-day post-repair follow-up inspection", "N/A", "A. Kulkarni" , BigDecimal.valueOf(0.0));
  
         // P-101
-        wo("WO-2987", "P-101", "2025-05-20", "2025-05-21", "Corrective", "Bearing noise reported by operator", "Bearing wear - lubrication interval exceeded", "S. Iyer", 8.0);
+        wo("WO-2987", "P-101", "2025-05-20", "2025-05-21", "Corrective", "Bearing noise reported by operator", "Bearing wear - lubrication interval exceeded", "S. Iyer", BigDecimal.valueOf(8.0));
  
         // V-12
-        wo("WO-2940", "V-12", "2025-04-10", "2025-04-10", "Inspection", "Routine thickness survey - no defects found", "N/A", "Inspection Team", 0.0);
-        wo("WO-3045","V-12","2025-06-28","2025-06-28","Inspection","External corrosion inspection - quarterly visual check", "N/A", "Inspection Team",0.0);
-        wo("WO-3050","V-12","2025-06-30","2025-07-01","Inspection","Annual pressure vessel inspection per PESO requirement", "N/A", "Inspection Team",0.0);
+        wo("WO-2940", "V-12", "2025-04-10", "2025-04-10", "Inspection", "Routine thickness survey - no defects found", "N/A", "Inspection Team", BigDecimal.valueOf(0.0));
+        wo("WO-3045","V-12","2025-06-28","2025-06-28","Inspection","External corrosion inspection - quarterly visual check", "N/A", "Inspection Team",BigDecimal.valueOf(0.0));
+        wo("WO-3050","V-12","2025-06-30","2025-07-01","Inspection","Annual pressure vessel inspection per PESO requirement", "N/A", "Inspection Team", BigDecimal.valueOf(0.0));
  
         // C-301
-        wo("WO-2811","C-301","2023-08-25","2023-08-25","Corrective","Compressor trip on high discharge temperature", "Cooling water strainer fouling - monsoon silt loading", "M. Das", 9.0);
-        wo("WO-3155","C-301","2025-09-18","2025-09-19","Corrective","Compressor trip on high discharge temperature", "Cooling water flow restriction", "M. Das", 10.0);
-        wo("WO-3160","C-301","2025-09-25","2025-09-25","Preventive","Strainer inspection frequency increased to biweekly per INC-2025-098", "N/A","M. Das",0.0);
+        wo("WO-2811","C-301","2023-08-25","2023-08-25","Corrective","Compressor trip on high discharge temperature", "Cooling water strainer fouling - monsoon silt loading", "M. Das", BigDecimal.valueOf(9.0));
+        wo("WO-3155","C-301","2025-09-18","2025-09-19","Corrective","Compressor trip on high discharge temperature", "Cooling water flow restriction", "M. Das", BigDecimal.valueOf(10.0));
+        wo("WO-3160","C-301","2025-09-25","2025-09-25","Preventive","Strainer inspection frequency increased to biweekly per INC-2025-098", "N/A","M. Das", BigDecimal.valueOf(0.0));
  
         // HX-205
-        wo("WO-3299","HX-205","2025-12-01","2025-12-02","Preventive","Tube bundle cleaning - scheduled maintenance",                                       "N/A",                                                                                         "R. Mehta",   4.0);
-        wo("WO-3360","HX-205","2026-02-05","2026-02-05","Inspection","Tube bundle thickness check - minor fouling noted",                                  "N/A",                                                                                         "Inspection Team",0.0);
+        wo("WO-3299","HX-205","2025-12-01","2025-12-02","Preventive","Tube bundle cleaning - scheduled maintenance",                                       "N/A",                                                                                         "R. Mehta",  BigDecimal.valueOf(4.0));
+        wo("WO-3360","HX-205","2026-02-05","2026-02-05","Inspection","Tube bundle thickness check - minor fouling noted",                                  "N/A",                                                                                         "Inspection Team", BigDecimal.valueOf(0.0));
  
         // V-22
-        wo("WO-3340","V-22","2026-01-22","2026-01-22","Inspection","Relief valve set-pressure verification",                                               "N/A",                                                                                         "Inspection Team",0.0);
+        wo("WO-3340","V-22","2026-01-22","2026-01-22","Inspection","Relief valve set-pressure verification",                                               "N/A",                                                                                         "Inspection Team", BigDecimal.valueOf(0.0));
  
         // T-410
-        wo("WO-3210","T-410","2025-08-30","2025-08-31","Corrective","High level alarm - level gauge calibration drift",                                    "Instrument calibration drift",                                                                "S. Iyer",    3.0);
-        wo("WO-3220","T-410","2025-09-15","2025-09-15","Preventive","Follow-up gauge accuracy verification post-recalibration",                            "N/A",                                                                                         "S. Iyer",    0.0);
+        wo("WO-3210","T-410","2025-08-30","2025-08-31","Corrective","High level alarm - level gauge calibration drift",                                    "Instrument calibration drift",                                                                "S. Iyer",    BigDecimal.valueOf(3.0));
+        wo("WO-3220","T-410","2025-09-15","2025-09-15","Preventive","Follow-up gauge accuracy verification post-recalibration",                            "N/A",                                                                                         "S. Iyer",    BigDecimal.valueOf(0.0));
  
         // M-115
-        wo("WO-3088","M-115","2025-07-14","2025-07-14","Preventive","Motor winding insulation resistance test - within spec",                              "N/A",                                                                                         "R. Mehta",   0.0);
+        wo("WO-3088","M-115","2025-07-14","2025-07-14","Preventive","Motor winding insulation resistance test - within spec",                              "N/A",                                                                                         "R. Mehta",  BigDecimal.valueOf(0.0));
 
         log.info("Work orders seded: {} records", workOrderRepository.count());
 
     }
 
-    private void wo( String id, String equipTag, String opened, String closed, String type, String description, String rootCause, String technician, Double downtimeHours) {
+    private void wo( String id, String equipTag, String opened, String closed, String type, String description, String rootCause, String technician, BigDecimal downtimeHours) {
         if(workOrderRepository.findById(id).isPresent()) return;
 
         Equipment equipment = equipmentRepository.findById(equipTag).orElseThrow(() -> new RuntimeException("Equipment not found: " + equipTag));

@@ -60,9 +60,11 @@ public class EmbeddingRepository {
             1 - (dc.embedding <=> ?::vector) AS similarity_score
             FROM document_chunks dc
             JOIN documents d ON d.id = dc.document_id
-            WHERE dc.embedding <=> ?::vector
+            WHERE dc.embedding IS NOT NULL
+            AND 1 - (dc.embedding <=> ?::vector) >= 0.25
+            ORDER BY dc.embedding <=> ?::vector
             LIMIT ?        
-        """;
+        """;     // changed WHERE dc.embedding <=> ?::vector \n LIMIT ? to WHERE dc.embedding IS NOT NULL \n ORDER BY dc.embedding <=> ?::vector
 
         List<ChunkSearchResult> results = jdbcTemplate.query(
             sql,
@@ -75,6 +77,7 @@ public class EmbeddingRepository {
                 rs.getString("doc_type"),
                 rs.getDouble("similarity_score")
             ),
+            vectorLiteral,
             vectorLiteral,
             vectorLiteral,
             TOP_K
@@ -101,11 +104,11 @@ public class EmbeddingRepository {
                 1 - (dc.embedding <=> ?::vector) AS similarity_score
             FROM document_chunks dc
             JOIN documents d ON d.id = dc.document_id
-            WHERE dc.embedding IS NOT NULL
+            WHERE dc.embedding IS NOT NULL             
             ORDER BY dc.embedding <=> ?::vector
             LIMIT ?
-            """;
- 
+            """;           
+  
         return jdbcTemplate.query(
             sql,
             (rs, rowNum) -> new ChunkSearchResult(

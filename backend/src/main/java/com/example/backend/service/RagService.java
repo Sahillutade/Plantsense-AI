@@ -62,9 +62,8 @@ public class RagService {
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
 
-    public RagService(String groqApiKey, EmbeddingService embeddingService, EmbeddingRepository embeddingRepository,
+    public RagService(EmbeddingService embeddingService, EmbeddingRepository embeddingRepository,
             WorkOrderRepository workOrderRepository, ObjectMapper objectMapper) {
-        this.groqApiKey = groqApiKey;
         this.embeddingService = embeddingService;
         this.embeddingRepository = embeddingRepository;
         this.workOrderRepository = workOrderRepository;
