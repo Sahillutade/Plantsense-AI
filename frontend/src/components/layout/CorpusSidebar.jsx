@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { fetchDocuments, ingestFile } from "../../api/api";
 
 const TYPE_META = {
     SOP:      { icon: 'bi-journal-text',      color: 'text-cyan-400'   },
@@ -10,29 +11,54 @@ const TYPE_META = {
   UNKNOWN:    { icon: 'bi-file-earmark',      color: 'text-slate-500'  }
 };
 
-const MOCK_DOCUMENTS = [
-    { id: 1,  filename: 'SOP_Pump_P204.txt',                  docType: 'SOP'        },
-    { id: 2,  filename: 'SOP_Compressor_C301.txt',            docType: 'SOP'        },
-    { id: 3,  filename: 'SOP_Vessel_V12.txt',                 docType: 'SOP'        },
-    { id: 4,  filename: 'SOP_Tank_T410.txt',                  docType: 'SOP'        },
-    { id: 5,  filename: 'Inspection_Report_Q1_2026.txt',      docType: 'INSPECTION' },
-    { id: 6,  filename: 'Incident_Report_INC_2025_114.txt',   docType: 'INCIDENT'   },
-    { id: 7,  filename: 'Incident_Report_INC_2025_098.txt',   docType: 'INCIDENT'   },
-    { id: 8,  filename: 'Incident_Report_INC_2025_142.txt',   docType: 'INCIDENT'   },
-    { id: 9,  filename: 'Compliance_Certificate_V12.txt',     docType: 'COMPLIANCE' },
-    { id: 10, filename: 'OEM_Manual_KBL_CP450_Excerpt.txt',   docType: 'OEM_MANUAL' }
-];
+export default function CorpusSidebar({ onDocumentAdded }) {
 
-export default function CorpusSidebar() {
+    const [documents, setDocuments] = useState([])
+    const [fetching, setFetching] = useState(true)
+    const [uploading, setUploading] = useState(false)
+    const [uploadMsg, setUploadMsg] = useState(null)
+    const [dragOver, setDragOver] = useState(false)
+    const fileInputRef = useRef()
 
-    const [documents] = useState(MOCK_DOCUMENTS);
-    const [dragOver, setDragOver] = useState(false);
-    const fileInputRef = useRef();
+    const loadDocuments = useCallback(() => {
+        setFetching(true)
+        fetchDocuments()
+        .then((res) => setDocuments(res.data))
+        .catch(() => setDocuments([]))
+        .finally(() => setFetching(false))
+    }, [])
 
-    const handleFileDrop = (e) => {
-        e.preventDefault();
-        setDragOver(false);
-        // wired to real ingestFile() in Phase 3
+    useEffect(() => { loadDocuments() }, [loadDocuments])
+
+    const handleUpload = async (file) => {
+        if(!file || uploading) return
+        setUploading(true)
+        setUploadMsg(null)
+
+        try {
+            const res = await ingestFile(file)
+            setUploadMsg({ text: `Ingested: ${res.data.filename}`, ok: true })
+            loadDocuments()
+            onDocumentAdded?.()
+        }
+        catch (err) {
+            const msg = err.response?.data?.error || 'Upload failed'
+            setUploadMsg({ text: msg, ok: false })
+        }
+        finally {
+            setUploading(false)
+            // Clear message after 4 seconds
+            setTimeout(() => setUploadMsg(null), 4000)
+            // Reset file input so same file can be re-uploaded
+            if (fileInputRef.current) fileInputRef.current.value = ''
+        }
+    }
+
+    const onDrop = (e) => {
+        e.preventDefault()
+        setDragOver(false)
+        const file = e.dataTransfer.files[0]
+        if (file) handleUpload(file)
     }
 
     return(
@@ -43,28 +69,34 @@ export default function CorpusSidebar() {
                     Corpus
                 </h2>
                 <span className="text-[10px] text-slate-600">
-                    {documents.length} docs
+                    {fetching ? '...' : `${documents.length} docs`}
                 </span>
             </div>
 
             {/* Document List */}
             <div className="flex-1 overflow-y-auto py-1.5">
-                {documents.length === 0 ? (
+                {fetching ? (
+                    <div className="flex flex-col gap-1.5 px-3 py-2">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="h-8 bg-slate-800/60 rounded-md animate-pulse" />
+                        ))}
+                    </div>
+                ) : documents.length === 0 ? (
                     <p className="text-slate-600 text-xs px-4 py-4 text-center">
                         No documents ingested yet.
                     </p>
                 ) : (
                     <ul>
                         {documents.map((doc) => {
-                            const meta = TYPE_META[doc.docType] || TYPE_META.UNKNOWN
+                            const meta = TYPE_META[doc.docType] ?? TYPE_META.UNKNOWN
                             return (
                                 <li key={doc.id} title={doc.filename} className="flex items-start gap-2.5 px-3 py-2 hover:bg-slate-800/70 rounded-md mx-1.5 cursor-default transition-colors group">
-                                    <i className={`bi ${meta.icon} ${meta.color} text-sm shrink-0 mt-px`} />
+                                    <i className={`bi ${meta.icon} ${meta.color} text=sm shrink-0 mt-px`} aria-hidden="true" />
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-slate-300 text-xs truncate leading-snug group-hover:text-slate-100 transition-colors">
+                                        <p className="text-slate-300 text-xs truncate laeding-snug group-hover:text-slate-100 transition-colors">
                                             {doc.filename}
                                         </p>
-                                        <span className="inline-block text-[9px] text-slate-600 mt-0.5 uppercase tracking-wider">
+                                        <span className="text-[9px] text-slate-600 uppercase tracking-wider">
                                             {doc.docType.replace('_', ' ')}
                                         </span>
                                     </div>
@@ -77,15 +109,42 @@ export default function CorpusSidebar() {
 
             {/* Upload zone */}
             <div className="shrink-0 px-3 pb-3 pt-2 border-t border-slate-800">
-                <div onDragOver={(e) => { e.preventDefault(); setDragOver(true) }} onDragLeave={() => setDragOver(false)} onDrop={handleFileDrop} onClick={() => fileInputRef.current?.click()} className={`flex flex-col items-center gap-1.5 rounded-xl border-2 border-dashed px-3 py-4 cursor-pointer transition-colors duration-150 ${dragOver ? 'border-cyan-400 bg-cyan-400/10' : 'border-slate-700 hover:border-slate-600 hover:bg-slate-800/50'}`}>
-                    <i className={`bi bi-vloud-upload text-lg transition-colors ${dragOver ? 'text-cyan-400' : 'text-slate-600'}`} />
-                    <p className="text-slate-500 text-xs text-center leading-snug">
-                        Drop file or <span className="text-cyan-500">browse</span>
+                
+                {/* Upload feedback */}
+                {uploadMsg && (
+                    <p className={`text-[10px] mb-1.5 text-center px-1 leading-snug ${uploadMsg.ok ? 'text-green-400' : 'text-red-400'}`}>
+                        {uploadMsg.ok
+                            ? <><i className="bi bi-check-circle me-1" /> {uploadMsg.text} </>
+                            : <><i className="bi bi-x-circle me-1" /> {uploadMsg.text} </>
+                        }
                     </p>
-                    <p className="text-slate-700 text-[10px]">.txt · .pdf · .csv</p>
+                )}
+
+                <div 
+                onDragOver={(e) => { e.preventDefault(); setDragOver(true) }}
+                onDragLeave={() => setDragOver(false)}
+                onDrop={onDrop}
+                onClick={() => !uploading && fileInputRef.current?.click()}
+                className={`flex flex-col items-center gap-1.5 rounded-xl border-2 border-dashed px-3 py-4 transition-colors duration-150 ${uploading ? 'border-cyan-500/40 bg-cyan-500/5 cursor-wait' : dragOver ? 'border-cyan-400 bg-cyan-400/10 cursor-copy' : 'border-slate-700 hover:border-slate-600 hover:bg-slate-800/50 cursor-pointer'}`}>
+                    {uploading ? (
+                        <>
+                            <i className="bi bi-arrow-repeat text-cyan-400 text-lg animate-spin" aria-hidden="true" />
+                            <p className="text-slate-400 text-xs">Processing...</p>
+                        </>
+                    ) : (
+                        <>
+                            <i className={`bi bi-cloud-upload text-lg transition-colors ${dragOver ? 'text-cyan-400' : 'text-slate-600'}`} aria-hidden="true" />
+                            <p className="text-slate-500 text-xs text-center leading-snug">
+                                Drop file or{' '}
+                                <span className="text-cyan-500">browse</span>
+                            </p>
+                            <p className="text-slate-700 text-[10px]">.txt · .pdf · .csv</p>
+                        </>
+                    )}
                 </div>
 
-                <input ref={fileInputRef} type="file" accept=".txt,.pdf,.csv" className="hidden" onChange={() => {/* wired in Phase 3 */}}></input>
+                <input ref={fileInputRef} type="file" accept=".txt,.pdf,.csv" className="hidden" onChange={(e) => handleUpload(e.target.files[0])} />
+
             </div>
         </aside>
     )

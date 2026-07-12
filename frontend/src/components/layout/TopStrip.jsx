@@ -1,16 +1,24 @@
-const MOCK_STATS = {
-    documentsIndexed : 10,
-    assetsTracked : 8,
-    openFlags : 1
-}
+import { useEffect, useState } from "react"
+import { fetchStats } from "../../api/api"
 
-export default function TopStrip({ mobilePanel, setMobilePanel }) {
 
-    const stats = MOCK_STATS;
+export default function TopStrip({ mobilePanel, setMobilePanel, onClearSession, refreshKey }) {
+
+    const [stats, setStats] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        setLoading(true)
+        fetchStats()
+        .then((res) => setStats(res.data))
+        .catch(() => setStats(null))
+        .finally(() => setLoading(false))
+    }, [refreshKey])
 
     return(
         <header className="shrink-0 w-full bg-slate-900 border-b border-slate-800 px-4 h-12 flex items-center justify-between gap-4 z-10">
 
+            {/* Left - Brand */}
             <div className="flex items-center gap-2.5 shrink-0">
                 <button onClick={() => setMobilePanel((p) => (p === 'sidebar' ? 'chat' : 'sidebar'))}
                 className="md:hidden w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors" aria-label="Toggle sidebar">
@@ -33,12 +41,31 @@ export default function TopStrip({ mobilePanel, setMobilePanel }) {
                 </div>
             </div>
 
-            <div className="flex items-center gap-3 sm:gap-5 text-xs shrink-0">
-                <StatPill icon="bi-file-earmark-text" value={stats.documentsIndexed} label="indexed" color="text-slate-400" />
-                <StatPill icon="bi-cpu" value={stats.assetsTracked} label="assets" color="text-slate-400" />
-                {stats.openFlags > 0 && (
-                    <StatPill icon="bi-exclamation-triangle-fill" value={stats.openFlags} label="flags" color="text-slate-400" />
-                )}
+            {/* Right - Stats + clear session */}
+            <div className="flex items-center gap-4">
+
+                {/* Stats */}
+                <div className="flex items-center gap-3 sm:gap-5 text-xs">
+                    {loading ? (
+                        <span className="text-slate-700 text-xs animate-pulse">
+                            Loading...
+                        </span>
+                    ) : stats ? (
+                        <>
+                            <StatPill icon="bi-file-earmark-text" value={stats.documentsIndexed} label="indexed" color="text-slate-400" />
+                            <StatPill icon="bi-cpu" value={stats.assetsTracked} label="assets" color="text-slate-400" />
+                            {stats.openFlags > 0 && (
+                                <StatPill icon="bi-exclamation-triangle-fill" value={stats.openFlags} label="flags" color="text-amber-400" />
+                            )}
+                        </>
+                    ) : null}
+                </div>
+
+                {/* Clear session button */}
+                <button onClick={onClearSession} title="Start a new conversation" className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-600 hover:text-slate-300 hover:bg-slate-800 transition-colors shrink-0">
+                    <i className="bi bi-arrow-counterclockwise text-sm" aria-hidden="true" />
+                </button>
+
             </div>
 
         </header>
