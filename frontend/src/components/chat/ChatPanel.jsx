@@ -14,73 +14,84 @@ const SUGGESTED_QUERIES = [
     'What does the SOP say about vibration limits?',
 ]
 
-export default function ChatPanel() {
+export default function ChatPanel({ sessionId, onEquipmentDetected }) {
 
-    const { messages, loading, sendMessage } = useChat();
+    const { messages, loading, historyLoaded, sendMessage } = useChat(sessionId)
+
     const bottomRef = useRef()
-    const inputRef = useRef()
 
-    // Auto-scroll to bottom whenever messages or loading state changes
+    // Auto-scroll to bottom on new messages
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'emooth' })
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, [messages, loading])
 
     const detectTag = (text) => {
-        if (!text) return null
+        if(!text) return null
         const upper = text.toUpperCase()
-        return EQUIPMENT_TAGS.find((tag) => upper.includes(tag)) ?? null
+        return EQUIPMENT_TAGS.find((t) => upper.includes(t)) ?? null
     }
 
     const handleSend = async (question) => {
-        // Detect tag in question immediately — show asset panel while loading
         const tagInQuestion = detectTag(question)
-        if (tagInQuestion) onEquipmentDetected?.(tagInQuestion)
+        if(tagInQuestion) onEquipmentDetected?.(tagInQuestion)
 
-        const reply = await sendMessage(question, sessionId)
+        const reply = await sendMessage(question)
 
-        // Also check the answer for tags in case question didn't contain one
-        if (!tagInQuestion && reply) {
+        if(!tagInQuestion && reply) {
             const tagInAnswer = detectTag(reply.content)
-            if (tagInAnswer) onEquipmentDetected?.(tagInAnswer)
-        }
-    }
-
-    const handleSuggestion = (query) => {
-        // Populate input field with suggested query text
-        if (inputRef.current?.querySelector('textarea')) {
-            inputRef.current.querySelector('textarea').value = query
-            inputRef.current.querySelector('textarea').focus()
+            if(tagInAnswer) onEquipmentDetected?.(tagInAnswer)
         }
     }
 
     const isEmpty = messages.length === 0 && !loading
+    const showSuggestions = isEmpty && historyLoaded
 
     return (
         <div className="flex flex-col h-full w-full bg-slate-950 min-w-0">
 
             {/* Message thread */}
             <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-5">
-                {isEmpty
-                    ? <EmptyState />
-                    : (
-                        <div className="flex flex-col gap-5">
-                            {messages.map((msg, idx) => 
-                                msg.role === 'user'
-                                    ? <UserMessage key={idx} content={msg.content} />
-                                    : <AssistantMessage key={idx} content={msg.content} confidence={msg.confidence} sources={msg.sources} />
-                            )}
-                            {loading && <TypingIndicator />}
-                            <div ref={bottomRef} />
+                
+                {/* History loading skeleton */}
+                {!historyLoaded && (
+                    <div className="flex flex-col gap-4">
+                        <div className="flex justify-end">
+                            <div className="w-48 h-10 bg-slate-800/60 rounded-2xl animate-pulse" />
                         </div>
-                    )
-                }
+                        <div className="flex justify-start gap-2.5">
+                            <div className="w-7 h-7 rounded-full bg-slate-800/60 animate-pulse shrink-0" />
+                            <div className="w-64 h-24 bg-slate-800/60 rounded-2xl animate-pulse" />
+                        </div>
+                    </div>
+                )}
+
+                {/* Empty state */}
+                {historyLoaded && isEmpty && <EmptyState />}
+
+                {/* Messages */}
+                {historyLoaded && (
+                    <div className="flex flex-col gap-5">
+                        {messages.map((msg, idx) => 
+                            msg.role === 'user'
+                            ? <UserMessage key={idx} content={msg.content} />
+                            : <AssistantMessage key={idx} content={msg.content} confidence={msg.confidence} sources={msg.sources} />
+                        )}
+                        {loading && <TypingIndicator />}
+                        <div ref={bottomRef} />
+                    </div>
+                )}
+
             </div>
 
             {/* Suggested query pills — only shown when thread is empty ─────── */}
-            {isEmpty && (
+            {showSuggestions && (
                 <div className="shrink-0 px-3 sm:px-6 pb-2 flex flex-wrap gap-2">
                     {SUGGESTED_QUERIES.map((q) => (
-                        <button key={q} onClick={() => handleSend(q)} className="text-xs text-slate-500 border border-slate-800 rounded-full px-3 py-1.5 hover:border-cyan-500/40 hover:text-cyan-400 transition-colors duration-150">
+                        <button
+                            key={q}
+                            onClick={() => handleSend(q)}
+                            className="text-xs text-slate-500 border border-slate-800 rounded-full px-3 py-1.5 hover:border-cyan-500/40 hover:text-cyan-400 transition-colors duration-150"
+                        >
                             {q}
                         </button>
                     ))}
@@ -88,9 +99,7 @@ export default function ChatPanel() {
             )}
 
             {/* Query input */}
-            <div ref={inputRef}>
                 <QueryInput onSend={handleSend} loading={loading} />
-            </div>
 
         </div>
     )

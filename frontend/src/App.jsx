@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSession } from './hooks/useSession'
 import TopStrip from './components/layout/TopStrip'
 import CorpusSidebar from './components/layout/CorpusSidebar'
 import ChatPanel from './components/chat/ChatPanel'
@@ -6,15 +7,21 @@ import AssetContextPanel from './components/layout/AssetContextPanel'
 
 function App() {
 
-  const [mobilePanel, setMobilePanel] = useState('chat')
+  const { sessionId, clearSession } = useSession()
 
+  const [mobilePanel, setMobilePanel] = useState('chat')
   const [activeTag, setActiveTag] = useState(null)
+  const [statsRefreshKey, setStatsRefreshKey] = useState(0)
+
+  // Called by CorpusSidebar after a successful upload
+  // Increments key so TopStrip re-fetches /api/documents/stats
+  const handleDocumentAdded = () => setStatsRefreshKey((k) => k + 1)
 
   return (
     <div className='flex flex-col h-screen w-screen overflow-hidden bg-slate-950'>
       
       {/* Top strip */}
-      <TopStrip mobilePanel={mobilePanel} setMobilePanel={setMobilePanel} activeTag={activeTag} />
+      <TopStrip mobilePanel={mobilePanel} setMobilePanel={setMobilePanel} activeTag={activeTag} onClearSession={clearSession} refreshKey={statsRefreshKey} />
 
       {/* Main content area */}
       <div className='flex flex-1 overflow-hidden'>
@@ -25,7 +32,7 @@ function App() {
             - Mobile:        only visible when mobilePanel === 'sidebar'
         */}
         <div className={`h-full flex-shrink-0 w-full md:w-56 lg:w-60 ${mobilePanel === 'sidebar' ? 'flex' : 'hidden'} md:flex flex-col`}>
-          <CorpusSidebar />
+          <CorpusSidebar onDocumentAdded={handleDocumentAdded} />
         </div>
 
         {/* Chat panel
@@ -33,7 +40,7 @@ function App() {
             - Mobile: only visible when mobilePanel === 'chat'
         */}
         <div className={`flex-1 h-full min-w-0 ${mobilePanel === 'chat' ? 'flex' : 'hidden'} md:flex flex-col`}>
-          <ChatPanel onEquipmentDetected={setActiveTag} />
+          <ChatPanel sessionId={sessionId} onEquipmentDetected={setActiveTag} />
         </div>
 
         {/* Asset context panel

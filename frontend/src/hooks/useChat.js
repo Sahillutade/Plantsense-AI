@@ -1,70 +1,53 @@
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+import { postChat, fetchHistory } from "../api/api"
 
 
-const STUB_RESPONSE = {
-    answer:
-        'P-204 failed on 2026-03-09 due to mechanical seal degradation, preceded ' +
-        'by a gradual rise in vibration over 5 days. The reading exceeded 4.5 mm/s ' +
-        'RMS but was not escalated for inspection per SOP-PUMP-204-01 Section 3.2. ' +
-        'This is the second seal-related failure in the past 12 months (see WO-3275, November 2025).',
-    confidence: 'High',
-    sources: [
-        {
-        filename:   'Inspection_Report_Q1_2026.txt',
-        docType:    'INSPECTION',
-        chunkIndex: 0,
-        excerpt:
-            'On 2026-03-04, condition monitoring logs showed vibration readings of ' +
-            '5.1 mm/s RMS, exceeding the SOP-PUMP-204-01 threshold of 4.5 mm/s RMS. ' +
-            'This reading was recorded in the shift log but was not escalated for ' +
-            'inspection per procedure...',
-        score: 0.89,
-        },
-        {
-        filename:   'SOP_Pump_P204.txt',
-        docType:    'SOP',
-        chunkIndex: 0,
-        excerpt:
-            'Any reading exceeding 4.5 mm/s RMS for more than 2 consecutive readings ' +
-            'shall trigger a mandatory inspection within 24 hours, regardless of ' +
-            'production schedule...',
-        score: 0.74,
-        },
-        {
-        filename:   'Incident_Report_INC_2025_114.txt',
-        docType:    'INCIDENT',
-        chunkIndex: 0,
-        excerpt:
-            'Seal face wear due to dry running conditions. Flush flow alarm setpoint ' +
-            'was set above the actual minimum safe flow, delaying detection...',
-        score: 0.61,
-        }
-    ]
-}
 
 // Simulated network delay (ms) - makes the stub feel realistic
 const STUB_DELAY_MS = 1800
 
-export function useChat() {
+export function useChat(sessionId) {
 
     const [messages, setMessages] = useState([])
-    const [loading, seetLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [historyLoaded, setHistoryLoaded] = useState(false)
     const [error, setError] = useState(null)
+
+    // Restore conversation history on mount
+    useEffect(() => {
+        if(!sessionId || historyLoaded) return
+
+        fetchHistory(sessionId)
+        .then((res) => {
+            const restored = res.data.map((m) => ({
+                role: m.role,
+                content: m.content,
+                confidence: m.confidence ?? null,
+                // Sources comes back as a parsed array from history endpoint
+                sources: Array.isArray(m.sources) ? m.sources : [],
+            }))
+            setMessages(restored)
+        })
+        .catch(() => {
+            // History fetch failure is non-fatal — start with empty thread
+            setMessages([])
+        })
+        .finally(() => setHistoryLoaded(true))
+    }, [sessionId, historyLoaded])
 
     const sendMessage = useCallback(async (question, sessionId) => {
         if(!question.trim() || loading) return null
 
         setError(null)
 
-        // Append user message immediately so UI feels responsive
-        const userMsg = { role: 'user', content: question }
-        setMessages((prev) => [...prev, userMsg])
-        seetLoading(true)
+        // Append user message immediately for snappy UX
+        setMessages((prev) => [...prev, { role: 'user', content: question }])
+        setLoading(true)
 
         try {
-            // STUB - replace this block in Phase 3
-            await new Promise((resolve) => setTimeout(resolve, STUB_DELAY_MS))
-            const data = { ...STUB_DELAY_MS, sessionId }
+            // Real API call — replaces Phase 2 stub
+            const res = await postChat(question, sessionId)
+            const data = res.data
 
             const assistantMsg = {
                 role: 'assistant',
@@ -77,25 +60,29 @@ export function useChat() {
             return assistantMsg
         }
         catch (err) {
+            const msg = err.response?.data?.error || err.message || 'Something went wrong. Please try again.'
+
             const errMsg = {
-                role: 'assistant',
-                content: 'Something went wrong. Please try again.',
-                sources: []
+                role:       'assistant',
+                content:    msg,
+                confidence: null,
+                sources:    [],
             }
             setMessages((prev) => [...prev, errMsg])
             setError(err.message)
             return null
         }
         finally {
-            seetLoading(false)
+            setLoading(false)
         }
-    }, [loading])
+    }, [loading, sessionId])
 
     const clearMessages = useCallback(() => {
         setMessages([])
         setError(null)
+        setHistoryLoaded(false)
     }, [])
 
-    return { messages, loading, error, sendMessage, clearMessages }
+    return { messages, loading, error, historyLoaded, sendMessage, clearMessages }
 
 }
