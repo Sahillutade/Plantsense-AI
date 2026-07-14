@@ -16,6 +16,7 @@ export default function AssetContextPanel({ activeTag }) {
     const [equipment, setEquipment] = useState(null)
     const [docs, setDocs] = useState([])
     const [loading, setLoading] = useState(false)
+    const [tab, setTab] = useState('overview')
 
     useEffect(() => {
         if(!activeTag) {
@@ -25,6 +26,7 @@ export default function AssetContextPanel({ activeTag }) {
         }
 
         setLoading(true)
+        setTab('overview')
         Promise.all([fetchEquipment(activeTag), fetchEquipmentDocs(activeTag)])
         .then(([eqRes, docRes]) => {
             setEquipment(eqRes.data)
@@ -46,7 +48,27 @@ export default function AssetContextPanel({ activeTag }) {
                 <h2 className="text-xs font-semibold text-white uppercase tracking-widest">
                     {activeTag ?? 'Asset Context'}
                 </h2>
+                {equipment && (
+                    <span className={`ml-auto text-[9px] font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide ${equipment.correctiveCount > 1 ? 'bg-red-400/10 text-red-400' : 'bg-slate-800 text-slate-500'}`}>
+                        {equipment.correctiveCount > 1 ? 'Attention' : 'Normal'}
+                    </span>
+                )}
             </div>
+
+            {/* Tab bar - only shown when data is loaded */}
+            {activeTag && !loading && equipment && (
+                <div className="shrink-0 flex border-b border-slate-800">
+                    {[
+                        { key: 'overview', label: 'Overview', icon: 'bi-bar-chart' },
+                        { key: 'docs',     label: `Docs (${docs.length})`, icon: 'bi-files' },
+                    ].map((t) => (
+                        <button key={t.key} onClick={() => setTab(t.key)} className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-xs transition-colors ${tab === t.key ? 'text-cyan-400 border-b-2 border-cyan-400 -mb-px' : 'text-slate-600 hover:text-slate-400'}`}>
+                            <i className={`bi ${t.icon} text-xs`} aria-hidden="true" />
+                            {t.label}
+                        </button>
+                    ))}
+                </div>
+            )}
 
             {/* Body */}
             {!activeTag ? (
@@ -59,92 +81,127 @@ export default function AssetContextPanel({ activeTag }) {
                         No data found for {activeTag}
                     </p>
                 </div>
+            ) : tab === 'overview' ? (
+                <OverviewTab equipment={equipment} />
             ) : (
-                <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-4">
-
-                    {/* Stats grid */}
-                    <div className="grid grid-cols-2 gap-2.5">
-                        <StatCard icon="bi-wrench" label="Work Orders" value={equipment.totalWorkOrders} />
-                        <StatCard icon="bi-exclamation-octagon" label="Corrective" value={equipment.correctiveCount} warn={equipment.correctiveCount > 0} />
-                    </div>
-
-                    {/* Next inspection */}
-                    <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl px-3 py-3">
-                        <div className="flex items-center gap-1.5 mb-1">
-                            <i className="bi bi-calendar-check text-slate-500 text-xs" />
-                            <p className="text-slate-500 text-[10px] uppercase tracking-wider">
-                                Next Inspection
-                            </p>
-                        </div>
-                        <p className="text-white text-sm font-semibold">
-                            {equipment.nextInspection}
-                        </p>
-                    </div>
-
-                    {/* Last failure */}
-                    {equipment.lastFailure && (
-                        <div className="rounded-xl border border-red-900/40 bg-red-950/30 px-3 py-3 flex flex-col gap-2.5">
-                            <div className="flex items-center gap-1.5">
-                                <i className="bi bi-lightning-fill text-red-400 text-xs" />
-                                <p className="text-red-400 text-[10px] font-semibold uppercase tracking-wider">
-                                    Last Failure
-                                </p>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
-                                <Field label="Date"       value={equipment.lastFailure.date} />
-                                <Field label="Work Order" value={equipment.lastFailure.workOrderId} />
-                                <div className="col-span-2">
-                                    <p className="text-slate-600 text-[10px]">Downtime</p>
-                                    <p className="text-red-300 font-semibold text-sm">
-                                        {equipment.lastFailure.downtimeHours}h
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="border-t border-red-900/30 pt-2">
-                                <p className="text-slate-600 text-[10px] mb-1">Root Cause</p>
-                                <p className="text-slate-300 text-xs leading-relaxed">
-                                    {equipment.lastFailure.rootCause}
-                                </p>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Related documents */}
-                    {docs.length > 0 && (
-                        <div>
-                            <p className="text-slate-600 text-[10px] uppercase tracking-wider mb-2">
-                                Related Documents
-                            </p>
-                            <ul className="flex flex-col gap-1.5">
-                                {docs.map((doc) => {
-                                    const meta = TYPE_META[doc.docType] || TYPE_META.UNKNOWN
-                                    return (
-                                        <li key={doc.documentId} className="flex items-center gap-2.5 bg-slate-800/50 border border-slate-700/40 rounded-lg px-2.5 py-2 hover:bg-slate-800 transition-colors">
-                                            <i className={`bi ${meta.icon} ${meta.color} text-sm shrink-0`} />
-                                            <div className="min-w-0">
-                                                <p className="text-slate-300 text-xs truncate">
-                                                    {doc.filename}
-                                                </p>
-                                                <p className="text-slate-600 text-[10px]">
-                                                    {doc.docType.replace('_', ' ')}
-                                                </p>
-                                            </div>
-                                        </li>
-                                    )
-                                })}
-                            </ul>
-                        </div>
-                    )}
-
-                </div>
+                <DocsTab docs={docs} />
             )}
 
         </aside>
     )
 
 }
+
+// Overview tab
+function OverviewTab({ equipment }) {
+
+    return (
+        <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-4">
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 gap-2.5">
+                <StatCard icon="bi-wrench" label="Work Orders" value={equipment.totalWorkOrders} />
+                <StatCard icon="bi-exclamation-octagon" label="Corrective" value={equipment.correctiveCount} warn={equipment.correctiveCount > 0} subtitle={equipment.correctiveCount > 1 ? `${equipment.correctiveCount} incidents` : undefined} />
+            </div>
+
+            {/* Next inspection */}
+            <div className="bg-slate-800/50 border border-slate-700/40 rounded-xl px-3 py-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                    <i className="bi bi-calendar-check text-slate-500 text-xs" aria-hidden="true" />
+                    <p className="text-slate-500 text-[10px] uppercase tracking-wider">
+                        Next Inspection
+                    </p>
+                </div>
+                <p className="text-white text-sm font-semibold">
+                    {equipment.nextInspection}
+                </p>
+            </div>
+
+            {/* Last failure */}
+            {equipment.lastFailure && (
+                <div className="rounded-xl border border-red-900/40 bg-red-950/25 px-3 py-3 flex flex-col gap-2.5">
+                    <div className="flex items-center gap-1.5">
+                        <i className="bi bi-lightning-fill text-red-400 text-xs" aria-hidden="true" />
+                        <p className="text-red-400 text-[10px] font-semibold uppercase tracking-wider">
+                            Last Failure
+                        </p>
+                    </div>
+ 
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+                        <Field label="Date"       value={equipment.lastFailure.date} />
+                        <Field label="Work Order" value={equipment.lastFailure.workOrderId} />
+                        <div className="col-span-2">
+                            <p className="text-slate-600 text-[10px]">Downtime</p>
+                            <p className="text-red-300 font-semibold">
+                                {equipment.lastFailure.downtimeHours}h unplanned
+                            </p>
+                        </div>
+                    </div>
+ 
+                    <div className="border-t border-red-900/30 pt-2.5">
+                        <p className="text-slate-600 text-[10px] mb-1">Root Cause</p>
+                        <p className="text-slate-300 text-xs leading-relaxed">
+                            {equipment.lastFailure.rootCause}
+                        </p>
+                    </div>
+                </div>
+            )}
+
+            {/* Similar incidents note */}
+            {equipment.correctiveCount > 1 && (
+                <div className="flex items-start gap-2 bg-amber-950/20 border border-amber-900/30 rounded-xl px-3 py-2.5">
+                    <i className="bi bi-info-circle text-amber-400 text-xs mt-0.5 shrink-0" aria-hidden="true" />
+                    <p className="text-amber-300/80 text-xs leading-relaxed">
+                        {equipment.correctiveCount} corrective events recorded. Pattern may indicate a systemic issue.
+                    </p>
+                </div>
+            )}
+
+        </div>
+    )
+
+}
+
+// Documents tab
+function DocsTab({ docs }) {
+
+    return (
+        <div className="flex-1 overflow-y-auto px-4 py-3">
+            {docs.length === 0 ? (
+                <p className="text-slate-600 text-xs text-center py-6">
+                    No related documents found.
+                </p>
+            ) : (
+                <ul className="flex flex-col gap-1.5">
+                    {docs.map((doc) => {
+                        const meta = TYPE_META[doc.docType] ?? TYPE_META.UNKNOWN
+                        return (
+                            <li key={doc.documentId} className="flex items-start gap-2.5 bg-slate-800/40 border border-slate-700/30 rounded-lg px-2.5 py-2.5 hover:bg-slate-800 transition-colors">
+                                <i className={`bi ${meta.icon} ${meta.color} text-sm shrink-0 mt-px`} aria-hidden="true" />
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-slate-300 text-xs font-medium truncate">
+                                        {doc.filename}
+                                    </p>
+                                    <p className="text-slate-600 text-[10px] mt-0.5">
+                                        {doc.docType.replace('_', ' ')}
+                                    </p>
+                                    {doc.excerpt && (
+                                        <p className="text-slate-500 text-[10px] mt-1 leading-relaxed line-clamp-2">
+                                            {doc.excerpt}
+                                        </p>
+                                    )}
+                                </div>
+                            </li>
+                        )
+                    })}
+                </ul>
+            )}
+        </div>
+    )
+
+}
+
+// Shared sub-components
 
 function Placeholder() {
     return (
