@@ -4,6 +4,7 @@ import TopStrip from './components/layout/TopStrip'
 import CorpusSidebar from './components/layout/CorpusSidebar'
 import ChatPanel from './components/chat/ChatPanel'
 import AssetContextPanel from './components/layout/AssetContextPanel'
+import KnowledgeGraph from './components/graph/KnowledgeGraph'
 
 function App() {
 
@@ -12,6 +13,7 @@ function App() {
   const [mobilePanel, setMobilePanel] = useState('chat')
   const [activeTag, setActiveTag] = useState(null)
   const [statsRefreshKey, setStatsRefreshKey] = useState(0)
+  const [showGraph, setShowGraph] = useState(false)
 
   // Called by CorpusSidebar after a successful upload
   // Increments key so TopStrip re-fetches /api/documents/stats
@@ -21,7 +23,7 @@ function App() {
     <div className='flex flex-col h-screen w-screen overflow-hidden bg-slate-950'>
       
       {/* Top strip */}
-      <TopStrip mobilePanel={mobilePanel} setMobilePanel={setMobilePanel} activeTag={activeTag} onClearSession={clearSession} refreshKey={statsRefreshKey} />
+      <TopStrip mobilePanel={mobilePanel} setMobilePanel={setMobilePanel} activeTag={activeTag} onClearSession={clearSession} refreshKey={statsRefreshKey} onShowGraph={() => setShowGraph(true)} />
 
       {/* Main content area */}
       <div className='flex flex-1 overflow-hidden'>
@@ -56,6 +58,11 @@ function App() {
 
       {/* Mobile bottom nav */}
       <MobileNav mobilePanel={mobilePanel} setMobilePanel={setMobilePanel} hasActiveTag={!!activeTag} />
+
+      {/* Kowledge graph modal */}
+      {showGraph && (
+        <KnowledgeGraph onClose={() => setShowGraph(false)} />
+      )}
 
     </div>
   )

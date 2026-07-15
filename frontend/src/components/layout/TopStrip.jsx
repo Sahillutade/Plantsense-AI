@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { fetchStats } from "../../api/api"
 
 
-export default function TopStrip({ mobilePanel, setMobilePanel, onClearSession, refreshKey }) {
+export default function TopStrip({ mobilePanel, setMobilePanel, onClearSession, refreshKey, onShowGraph }) {
 
     const [stats, setStats] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -60,6 +60,15 @@ export default function TopStrip({ mobilePanel, setMobilePanel, onClearSession, 
                         </>
                     ) : null}
                 </div>
+
+                {/* Divider */}
+                <div className="hidden sm:block w-px h-4 bg-slate-800" />
+
+                {/* Knowledge graph button */}
+                <button onClick={onShowGraph} title="View knowledge graph" aria-label="Open knowledge graph" className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-slate-500 hover:text-cyan-400 hover:bg-cyan-400/10 border border-transparent hover:border-cyan-400/20 transition-all duration-150 text-xs">
+                    <i className="bi bi-diagram-3 text-sm" aria-hidden="true" />
+                    <span className="hidden sm:inline">Graph</span>
+                </button>
 
                 {/* Clear session button */}
                 <button onClick={onClearSession} title="Start a new conversation" className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-600 hover:text-slate-300 hover:bg-slate-800 transition-colors shrink-0">
