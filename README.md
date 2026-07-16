@@ -1,9 +1,9 @@
-# Vigil AI — Industrial Knowledge Intelligence Platform
+# Plantsense AI — Industrial Knowledge Intelligence Platform
 
 > *"Professionals in asset-intensive industries spend 35% of their working hours searching for information that already exists somewhere in the organisation."*
 > — McKinsey Global Survey, 2024
 
-Vigil AI makes that search instant — and makes the connections between documents visible for the first time.
+Plantsense AI makes that search instant — and makes the connections between documents visible for the first time.
 
 ---
 
@@ -13,7 +13,7 @@ A typical large Indian plant runs across 7–12 disconnected document systems. P
 
 The result: a maintenance engineer deciding whether to shut down a pump doesn't know that three months ago, an inspection report flagged a rising vibration trend on the same equipment class. That failure happens anyway. 18–22% of unplanned downtime in Indian heavy industry traces back to exactly this kind of fragmented knowledge.
 
-Vigil AI solves this.
+Plantsense AI solves this.
 
 ---
 
@@ -21,9 +21,9 @@ Vigil AI solves this.
 
 **Ask any operational question in plain English. Get a grounded answer with source citations.**
 
-Vigil AI ingests SOPs, inspection reports, incident records, OEM manuals, compliance certificates, and structured maintenance work order history — then makes their collective intelligence queryable through a single conversational interface.
+Plantsense AI ingests SOPs, inspection reports, incident records, OEM manuals, compliance certificates, and structured maintenance work order history — then makes their collective intelligence queryable through a single conversational interface.
 
-![Vigil AI Screenshot](docs/screenshot.png)
+![Plantsense AI Screenshot](docs/screenshot.png)
 
 Every answer is:
 - **Grounded** — pulled from specific document chunks, never hallucinated
@@ -35,18 +35,18 @@ Every answer is:
 
 ## Demo — The P-204 Story
 
-This is the narrative that shows what makes Vigil AI different from a generic PDF chatbot.
+This is the narrative that shows what makes Plantsense AI different from a generic PDF chatbot.
 
 **Query:** *"Why did pump P-204 fail last March?"*
 
-A generic search returns a list of documents. Vigil AI returns:
+A generic search returns a list of documents. Plantsense AI returns:
 
 > *P-204 failed on 2026-03-09 due to mechanical seal degradation, preceded by a gradual rise in vibration over 5 days. The reading exceeded 4.5 mm/s RMS but was not escalated for inspection per SOP-PUMP-204-01 Section 3.2. This is the second seal-related failure in the past 12 months.*
 > — Sources: Inspection_Report_Q1_2026.txt · SOP_Pump_P204.txt · WO-3381
 
-No single person on that plant had connected those four documents. The inspection report, the SOP, the OEM manual, and the work order history all lived in different systems. Vigil AI connected them in 2 seconds.
+No single person on that plant had connected those four documents. The inspection report, the SOP, the OEM manual, and the work order history all lived in different systems. Plantsense AI connected them in 2 seconds.
 
-**This is the knowledge cliff in action — and Vigil AI is the solution.**
+**This is the knowledge cliff in action — and Plantsense AI is the solution.**
 
 ---
 
@@ -115,7 +115,7 @@ User query (natural language)
 ## Project Structure
 
 ```
-vigil-ai/
+Plantsense-ai/
 ├── frontend/                    React app (Vite)
 │   └── src/
 │       ├── api/api.js           All backend calls, documented
@@ -219,7 +219,7 @@ The `data/` folder contains a carefully designed set of synthetic industrial doc
 - **18–22%** of unplanned downtime in Indian heavy industry linked to knowledge fragmentation (BIS Research)
 - **25%** of experienced industrial engineers retiring within a decade — taking undocumented operational knowledge with them
 
-Vigil AI addresses all three. Query time drops from hours to seconds. Failure patterns become visible across incident history. Expert knowledge is preserved in documents that outlast individual tenure.
+Plantsense AI addresses all three. Query time drops from hours to seconds. Failure patterns become visible across incident history. Expert knowledge is preserved in documents that outlast individual tenure.
 
 ---
 
