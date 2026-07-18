@@ -80,8 +80,8 @@ export default function KnowledgeGraph({ onClose }) {
         const angle = (2 * Math.PI * i) / EQUIPMENT_NODES.length - Math.PI / 2
         return {
             ...eq,
-            x: CX + EQ_RADIUS + Math.cos(angle),
-            y: CY + EQ_RADIUS + Math.sin(angle),
+            x: CX + EQ_RADIUS * Math.cos(angle),
+            y: CY + EQ_RADIUS * Math.sin(angle),
             angle,
         }
     })
